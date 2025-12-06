@@ -1,0 +1,139 @@
+package service
+
+import (
+	"errors"
+	"time"
+	"github.com/Kaikai20040827/graduation/internal/model"
+	"github.com/Kaikai20040827/graduation/internal/pkg"
+
+	"gorm.io/gorm"
+)
+
+type UserService struct {
+	db *gorm.DB
+}
+
+func (s *UserService) NewUserService(db *gorm.DB) *UserService {
+	return &UserService{db: db}
+}
+
+func (s *UserService) CreateUser(username string, email string, password string) (*model.User, error) {
+	//检查邮箱是否注册
+	var count int64
+	s.db.Model(&model.User{}).Where("email = ?").Count(&count)
+
+	//邮箱已注册
+	if count > 0 {
+		return nil, errors.New("email already exists")
+	}
+
+	//密码哈希化
+	hashedPwd, err := pkg.HashPassword(password)
+	if err != nil {
+		return nil, err
+	}
+
+	//创建用户
+	user := &model.User{
+		Email:    email,
+		Username: username,
+		Password: hashedPwd,
+		CreatedAt: time.Now(),
+	}
+
+	//数据库创建用户
+	if err := s.db.Create(user).Error; err != nil {
+		return nil, err
+	}
+
+	// 将返回给调用方的用户对象中的密码字段清空，
+	// 以避免将密码（即使是哈希后的密码）暴露给外部调用者
+	user.Password = "" 
+
+	return user, nil
+}
+
+func (s *UserService) DeleteUser(username string) error {
+	var count int64
+	s.db.Model(&model.User{}).Where("Username = ?").Count(&count)
+
+	if count != 0 {
+		return errors.New("user does not exist")
+	}
+	
+	var user *model.User
+	s.db.Model(&model.User{}).Where("Username = ?", username).Find(&user)
+	if err := s.db.Delete(user); err != nil {
+		return errors.New("failed to delete")
+	}
+
+	return nil
+}
+
+// oldPassword should be input by users
+func (s *UserService) ChangePassword(email string, oldPassword string, newPassword string) error {
+	var count int64
+	s.db.Model(&model.User{}).Where("Username = ?").Count(&count)
+
+	if count != 0 {
+		return errors.New("user does not exist")
+	}
+
+	var user *model.User
+	s.db.Model(&model.User{}).Where("Email = ?", email).Find(&user)
+
+	if err := pkg.CheckPassword(user.Password, oldPassword); err != nil {
+		return errors.New("old password incorrect")
+	}
+
+	newHashedPassword, err := pkg.HashPassword(newPassword)
+	if err != nil {
+		return err
+	}
+
+	user.Password = newHashedPassword
+	user.UpdatedAt = time.Now()
+
+	return s.db.Save(&user).Error
+}
+
+func (s *UserService) ChangeUsernamer(email string, newUsername string) error {
+	var count int64
+	s.db.Model(&model.User{}).Where("Username = ?").Count(&count)
+
+	if count != 0 {
+		return errors.New("user does not exist")
+	}
+
+	var user *model.User
+	s.db.Model(&model.User{}).Where("email = ?", email).Find(&user)
+
+	user.Username = newUsername
+	user.UpdatedAt = time.Now()
+
+	return s.db.Save(&user).Error
+}
+
+
+func (s *UserService) Authenticate(email, password string) (*model.User, error) {
+	var u model.User
+	if err := s.db.Where("email = ?", email).First(&u).Error; err != nil {
+		return nil, err
+	}
+	if err := pkg.CheckPassword(u.Password, password); err != nil {
+		return nil, errors.New("invalid credentials")
+	}
+	u.Password = ""
+	return &u, nil
+}
+
+func (s *UserService) GetByID(id uint) (*model.User, error) {
+	var u model.User
+	if err := s.db.First(&u, id).Error; err != nil {
+		return nil, err
+	}
+	u.Password = ""
+	return &u, nil
+}
+
+
