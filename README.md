@@ -1,5 +1,7 @@
 # Introduction
---- directories
+
+# File Tree
+``` directories
 my-gin-project/
 ├── cmd/
 │   └── server/
@@ -62,4 +64,4 @@ my-gin-project/
 ├── go.sum
 ├── Makefile                 # 构建脚本
 └── README.md
----
+```
