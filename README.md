@@ -2,7 +2,7 @@
 
 # File Tree
 ``` directories
-my-gin-project/
+Secure_file_box/
 ├── cmd/
 │   └── server/
 │       └── main.go          
