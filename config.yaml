@@ -1,0 +1,24 @@
+# 服务器配置
+server:
+  app_name: secure_file_box
+  env: development
+  debug: true
+  host: 127.0.0.1
+  port: 8080
+  time_zone: Asia/Shanghai
+
+# 数据库配置
+database:
+  driver: mysql
+  host: localhost
+  port: 3306
+  user: root
+  password: password
+  name: secure_file_box
+  debug: true
+
+# JWT 认证配置
+jwt:
+  secret: "" #32位
+  issuer: secure_file_box
+  audience: your-app
