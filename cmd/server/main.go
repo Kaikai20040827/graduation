@@ -1,21 +1,41 @@
 package main
 
 import (
-    "fmt"
-    "log"
+	"fmt"
+	"net/http"
+	"os"
+	"strconv"
 
-    "github.com/Kaikai20040827/graduation/internal/config"
+	"github.com/Kaikai20040827/graduation/internal/config"
+	"github.com/Kaikai20040827/graduation/internal/handler"
+	"github.com/Kaikai20040827/graduation/internal/middleware"
+	"github.com/Kaikai20040827/graduation/internal/pkg"
+	"github.com/Kaikai20040827/graduation/internal/service"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
     cfg, err := config.LoadConfig()
+
     if err != nil {
-        log.Fatal(err)
+        panic(err)
     }
+    pkg.InitLogger(cfg.Server.Debug)
 
-    fmt.Println("App Name:", cfg.Server.AppName)
-    fmt.Println("DB Host:", cfg.Database.Host)
+    defer func() {
+		if pkg.Logger != nil {
+			_ = pkg.Logger.Sync()
+		}
+	}()
 
-    // 这里启动 Gin / Fiber / Echo 等
+    //db
+    db, err := pkg.NewDatabase(&cfg.Database)
+	if err!=nil{
+		pkg.Logger.Sugar().Fatalf("db connect failed: %v", err)
+	
+	// services
+	userSrv := service.NewUserService(db)
+	fileSrv := service.NewFileService(db, "./storage")
+
 }
-

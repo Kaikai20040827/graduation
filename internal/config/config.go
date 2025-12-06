@@ -44,7 +44,7 @@ func LoadConfig() (*Config, error) {
     // 配置文件名
     v.SetConfigName("config")
     v.SetConfigType("yaml")
-    v.AddConfigPath(".") // 根目录读取 config.yaml
+    v.AddConfigPath("./config.yaml") // 根目录读取 config.yaml
 
     // 支持环境变量覆盖，例如：SERVER_APP_NAME
     v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
