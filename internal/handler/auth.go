@@ -1,0 +1,79 @@
+package handler
+
+import (
+	"strconv"
+	"net/http"
+
+	"github.com/Kaikai20040827/graduation/internal/config"
+	"github.com/Kaikai20040827/graduation/internal/middleware"
+	"github.com/Kaikai20040827/graduation/internal/pkg"
+	"github.com/Kaikai20040827/graduation/internal/service"
+	"github.com/gin-gonic/gin"
+)
+
+type AuthHandler struct {
+	userSrv *service.UserService
+	jwtCfg  *config.JWTConfig
+}
+
+func NewAuthHandler(usersrv *service.UserService, jwtcfg *config.JWTConfig) *AuthHandler {
+	return &AuthHandler{
+		userSrv: usersrv,
+		jwtCfg:  jwtcfg,
+	}
+}
+
+type RegisterReq struct {
+	Email    string `json:"email" binding:"require,email"`
+	Password string `json:"password" binding:"required,min=6"`
+	Username string `json:"username" binding:"required"`
+}
+
+func (h *AuthHandler) Register(context *gin.Context) {
+	var req RegisterReq
+	if err := context.ShouldBindBodyWithJSON(&req); err != nil {
+		pkg.JSONError(context, 40001, "failed to bind")
+		context.Abort()
+		return 
+	}
+	user, err := h.userSrv.CreateUser(req.Username, req.Email, req.Password)
+	if err!=nil{
+		pkg.JSONError(context, 40002, "failed to create user")
+		context.Abort()
+		return 
+	}
+	pkg.JSONOK(context, user)
+}
+
+type LoginReq struct {
+	Email    string `json:"email" binding:"required,email"`
+	Password string `json:"password" binding:"required"`
+}
+
+func (h *AuthHandler) Login(c *gin.Context) {
+	var req LoginReq
+	if err := c.ShouldBindJSON(&req); err != nil {
+		pkg.JSONError(c, 40001, "invalid params")
+		return
+	}
+	u, err := h.userSrv.Authenticate(req.Email, req.Password)
+	if err != nil {
+		pkg.JSONError(c, 40101, "invalid credentials")
+		return
+	}
+	user_id, _ := strconv.Atoi(u.ID)
+	token, err := middleware.GenerateToken(h.jwtCfg, uint(user_id))
+	if err != nil {
+		pkg.JSONError(c, 50001, "token gen failed")
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"code":    0,
+		"message": "ok",
+		"data": gin.H{
+			"token":   token,
+			"expires": 0,
+			"user":    u,
+		},
+	})
+}
