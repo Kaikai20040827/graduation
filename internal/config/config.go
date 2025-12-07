@@ -44,7 +44,7 @@ func LoadConfig() (*Config, error) {
     // 配置文件名
     v.SetConfigName("config")
     v.SetConfigType("yaml")
-    v.AddConfigPath("./config.yaml") // 根目录读取 config.yaml
+    v.AddConfigPath("../../") // 根目录读取 config.yaml
 
     // 支持环境变量覆盖，例如：SERVER_APP_NAME
     v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
@@ -58,7 +58,7 @@ func LoadConfig() (*Config, error) {
     } else {
         fmt.Println("✓ Using config file:", v.ConfigFileUsed())
     }
-
+    
     var cfg Config
     if err := v.Unmarshal(&cfg); err != nil {
         return nil, fmt.Errorf("解析配置失败: %w", err)
