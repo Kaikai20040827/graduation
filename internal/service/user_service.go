@@ -53,7 +53,7 @@ func (s *UserService) CreateUser(username string, email string, password string)
 	return user, nil
 }
 
-func (s *UserService) DeleteUser(username string) error {
+func (s *UserService) DeleteUser(username string, inputPassword string) error {
 	var count int64
 	s.db.Model(&model.User{}).Where("Username = ?").Count(&count)
 
@@ -61,8 +61,14 @@ func (s *UserService) DeleteUser(username string) error {
 		return errors.New("user does not exist")
 	}
 	
+	
 	var user *model.User
 	s.db.Model(&model.User{}).Where("Username = ?", username).Find(&user)
+	
+	if user.Password != inputPassword {
+		return errors.New("incorrect password")
+	}
+
 	if err := s.db.Delete(user); err != nil {
 		return errors.New("failed to delete")
 	}
@@ -97,7 +103,7 @@ func (s *UserService) ChangePassword(email string, oldPassword string, newPasswo
 	return s.db.Save(&user).Error
 }
 
-func (s *UserService) ChangeUsernamer(email string, newUsername string) error {
+func (s *UserService) ChangeUsername(email string, newUsername string) error {
 	var count int64
 	s.db.Model(&model.User{}).Where("Username = ?").Count(&count)
 
@@ -136,4 +142,15 @@ func (s *UserService) GetByID(id uint) (*model.User, error) {
 	return &u, nil
 }
 
-
+func (s *UserService) UpdateProfile(id uint, username string) (*model.User, error) {
+	var u model.User
+	if err := s.db.First(&u, id).Error; err != nil {
+		return nil, err
+	}
+	u.Username = username
+	if err := s.db.Save(&u).Error; err != nil {
+		return nil, err
+	}
+	u.Password = ""
+	return &u, nil
+}

@@ -32,12 +32,9 @@ my-gin-project/
 │   │   ├── auth_routes.go
 │   │   └── user_routes.go
 │   └── pkg/
-│       ├── database/        # 数据库连接
-│       │   └── db.go
-│       ├── logger/          # 日志
-│       │   └── logger.go
-│       └── utils/           # 工具函数
-│           └── jwt.go
+│       ├── db.go        # 数据库连接  
+│       ├── logger.go         # 日志
+│       └── utils.go   #工具函数
 ├── pkg/                     # 可复用的公共包
 ├── api/                     # API 文档
 │   └── swagger/

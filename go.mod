@@ -4,6 +4,7 @@ go 1.25.4
 
 require (
 	github.com/gin-gonic/gin v1.11.0
+	github.com/golang-jwt/jwt/v4 v4.5.2
 	github.com/spf13/viper v1.21.0
 	go.uber.org/zap v1.27.1
 	gorm.io/driver/mysql v1.6.0
