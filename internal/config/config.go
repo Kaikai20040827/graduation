@@ -115,6 +115,7 @@ func validateConfig(cfg *Config) error {
 	return nil
 }
 
+//函数使用计数器
 func NewFuncCounters() *FuncCounters {
 	return &FuncCounters{
 		ConfigLoadingFuncCounter: 0,
