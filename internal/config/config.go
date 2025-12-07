@@ -27,13 +27,13 @@ type DatabaseConfig struct {
 }
 
 type JWTConfig struct {
-    Secret   string `mapstructure:"secret"`
-    Issuer   string `mapstructure:"issuer"`
+    Secret   string `mapstructure:"secret"` //签名密钥
+    Issuer   string `mapstructure:"issuer"` // 签发者
     Audience string `mapstructure:"audience"`
 }
 
 type Config struct {
-    Server   ServerConfig   `mapstructure:"server"`
+    Server   ServerConfig   `mapstructure:"server"` 
     Database DatabaseConfig `mapstructure:"database"`
     JWT      JWTConfig      `mapstructure:"jwt"`
 }
