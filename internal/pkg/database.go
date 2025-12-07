@@ -20,28 +20,33 @@ func NewDatabase(cfg *config.DatabaseConfig) (*gorm.DB, error) {
     dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		cfg.User, cfg.Password, cfg.Host, cfg.Port, cfg.Name,
 	)
+    fmt.Println("✓ Database login basic information done")
 
     //配置访问时的日志模式
     gormConfig := &gorm.Config{
         Logger: logger.Default.LogMode(logger.Silent),
     }
+    fmt.Println("✓ Database logger mode configuration done")
 
     //创建一个数据库访问实例
     db, err := gorm.Open(mysql.Open(dsn), gormConfig)
     if err != nil {
         return nil, err
     }
+    fmt.Println("✓ Creating a database connection done")
 
     //连接数据库
     sqlDB, err := db.DB()
     if err != nil {
         return nil, err
     }
+    fmt.Println("✓ Connecting the database done")
 
     //配置连接
     sqlDB.SetConnMaxIdleTime(20) //最大闲置连接时间
     sqlDB.SetConnMaxLifetime(time.Hour) //最大连接生命周期: Hour（小时）
     sqlDB.SetMaxOpenConns(100) //最大打开的连接数量
+    fmt.Println("✓ Setting configuration of the connection done")
 
     //全局保存这个数据库访问
     DB = db
@@ -49,6 +54,7 @@ func NewDatabase(cfg *config.DatabaseConfig) (*gorm.DB, error) {
     if err := migrate(db); err != nil {
 		log.Printf("自动迁移失败: %v", err)
 	}
+    fmt.Println("✓ Migrating the database done")
 
     //无异常，则返回数据库
     return db, nil

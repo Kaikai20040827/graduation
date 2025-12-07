@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"strconv"
 
@@ -18,20 +19,32 @@ const (
 )
 
 func main() {
+	fmt.Println("-----Secure File Box-----")
+	fmt.Println("")
+
 	// 1. 加载配置
+	fmt.Println("-----Starting loading configuration-----")
 	cfg, err := config.LoadConfig()
 	if err != nil {
 		log.Fatalf("load config error: %v", err)
 	}
+	fmt.Println("-----Loaded successfully-----")
+	fmt.Println("")
 
 	// 2. Logger
+	fmt.Println("-----Starting initializing logger-----")
 	pkg.InitLogger(Debug)
+	fmt.Println("-----Initialized logger successfully-----")
+	fmt.Println("")
 
-	// 3. DB
+	// 3. DB(mysql)
+	fmt.Println("-----Starting initializing database-----")
 	db, err := pkg.NewDatabase(&cfg.Database)
 	if err != nil {
 		log.Fatalf("db init error: %v", err)
 	}
+	fmt.Println("-----Initialized database successfully-----")
+	fmt.Println("")
 
 	// 4. Services
 	userSrv := service.NewUserService(db)

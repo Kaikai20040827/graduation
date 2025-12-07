@@ -45,29 +45,33 @@ func LoadConfig() (*Config, error) {
     v.SetConfigName("config")
     v.SetConfigType("yaml")
     v.AddConfigPath("../../") // 根目录读取 config.yaml
+    fmt.Println("✓ Loading config file done")
 
     // 支持环境变量覆盖，例如：SERVER_APP_NAME
     v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
     v.AutomaticEnv()
 
     setDefaults(v)
+    fmt.Println("✓ Setting default configuration done")
 
     // 读取 YAML
     if err := v.ReadInConfig(); err != nil {
         fmt.Println("⚠ config.yaml 未找到，默认使用默认值 + 环境变量")
     } else {
-        fmt.Println("✓ Using config file:", v.ConfigFileUsed())
+        fmt.Printf("✓ Using config file: %s, not using default configuration\n", v.ConfigFileUsed())
     }
     
     var cfg Config
     if err := v.Unmarshal(&cfg); err != nil {
         return nil, fmt.Errorf("解析配置失败: %w", err)
     }
+    fmt.Println("✓ Unmarshalling config file done")
 
     // 校验
     if err := validateConfig(&cfg); err != nil {
         return nil, err
     }
+    fmt.Println("✓ Validating config file done")
 
     return &cfg, nil
 }
@@ -84,7 +88,7 @@ func setDefaults(v *viper.Viper) {
     v.SetDefault("database.host", "localhost")
     v.SetDefault("database.port", 3306)
     v.SetDefault("database.user", "root")
-    v.SetDefault("database.password", "")
+    v.SetDefault("database.password", "0827")
     v.SetDefault("database.name", "secure_file_box")
     v.SetDefault("database.debug", false)
 
