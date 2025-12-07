@@ -3,6 +3,7 @@ package handler
 import(
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"fmt"
 	"strconv"
 	"path/filepath"
 	"github.com/Kaikai20040827/graduation/internal/pkg"
@@ -14,6 +15,7 @@ type FileHandler struct {
 }
 
 func NewFileHandler(fs *service.FileService) *FileHandler {
+	fmt.Println("✓ Creating a new file handler done")
 	return &FileHandler{fileSrv: fs}
 }
 

@@ -2,7 +2,7 @@ package handler
 
 import (
 	"net/http"
-
+	"fmt"
 	"github.com/Kaikai20040827/graduation/internal/pkg"
 	"github.com/Kaikai20040827/graduation/internal/service"
 
@@ -14,6 +14,7 @@ type UserHandler struct {
 }
 
 func NewUserHandler(us *service.UserService) *UserHandler {
+	fmt.Println("✓ Creating a new user handler done")
 	return &UserHandler{
 		userSrv: us,
 	}

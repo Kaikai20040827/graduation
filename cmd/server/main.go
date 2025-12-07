@@ -21,6 +21,7 @@ const (
 func main() {
 	fmt.Println("-----Secure File Box-----")
 	fmt.Println("")
+	//counters := config.NewFuncCounters()
 
 	// 1. 加载配置
 	fmt.Println("-----Starting loading configuration-----")
@@ -28,12 +29,16 @@ func main() {
 	if err != nil {
 		log.Fatalf("load config error: %v", err)
 	}
+	// fmt.Printf("(%d/5) done", )
+	// fmt.Println("")
 	fmt.Println("-----Loaded successfully-----")
 	fmt.Println("")
 
 	// 2. Logger
 	fmt.Println("-----Starting initializing logger-----")
 	pkg.InitLogger(Debug)
+	// fmt.Printf("(%d/1) done", )
+	// fmt.Println("")
 	fmt.Println("-----Initialized logger successfully-----")
 	fmt.Println("")
 
@@ -43,23 +48,41 @@ func main() {
 	if err != nil {
 		log.Fatalf("db init error: %v", err)
 	}
+	// fmt.Printf("(%d/6) done", )
+	// fmt.Println("")
 	fmt.Println("-----Initialized database successfully-----")
 	fmt.Println("")
 
 	// 4. Services
+	fmt.Println("-----Starting initializing service(UserService, FileService)-----")
 	userSrv := service.NewUserService(db)
-	fileSrv := service.NewFileService(db, "./storage")
+	fileSrv := service.NewFileService(db, "../../storage")
+	// fmt.Printf("(%d/2) done", )
+	// fmt.Println("")
+	fmt.Println("-----Initialized UserService and FileService successfully-----")
+	fmt.Println("")
 
 	// 5. Handlers
+	fmt.Println("-----Starting initializing handlers(UserService, FileService)-----")
 	authH := handler.NewAuthHandler(userSrv, &cfg.JWT)
 	userH := handler.NewUserHandler(userSrv)
 	fileH := handler.NewFileHandler(fileSrv)
+	// fmt.Printf("(%d/3) done", )
+	// fmt.Println("")
+	fmt.Println("-----Initialized UserService and FileService successfully-----")
+	fmt.Println("")
 
 	// 6. Gin
+	fmt.Println("-----Starting initializing Gin framework-----")
 	r := gin.Default()
+	fmt.Println("-----Initialized Gin framework successfully-----")
+	fmt.Println("")
 
 	// 7. 注册 API 路由（最关键）
+	fmt.Println("-----Starting initializing API-----")
 	routes.RegisterAPIRoutes(r, authH, userH, fileH, &cfg.JWT)
+	fmt.Println("-----Initialized API successfully-----")
+	fmt.Println("")
 
 	// 8. 启动
 	port:= strconv.Itoa(cfg.Server.Port)

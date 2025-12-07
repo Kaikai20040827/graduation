@@ -3,6 +3,7 @@ package service
 import (
 	"errors"
 	"time"
+	"fmt"
 	"github.com/Kaikai20040827/graduation/internal/model"
 	"github.com/Kaikai20040827/graduation/internal/pkg"
 
@@ -14,7 +15,9 @@ type UserService struct {
 }
 
 func NewUserService(db *gorm.DB) *UserService {
+	fmt.Println("✓ Creating a new user service done")
 	return &UserService{db: db}
+	
 }
 
 func (s *UserService) CreateUser(username string, email string, password string) (*model.User, error) {

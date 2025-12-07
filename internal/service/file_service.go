@@ -18,6 +18,7 @@ type FileService struct {
 
 func NewFileService(db *gorm.DB, storagePath string) *FileService {
 	_ = os.MkdirAll(storagePath, 0755)
+	fmt.Println("✓ Creating a new file service done")
 	return &FileService{db: db, dirpath: storagePath}
 }
 

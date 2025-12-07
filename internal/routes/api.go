@@ -22,7 +22,7 @@ func RegisterAPIRoutes(
 	// 公共 API
 	{
 		api.GET("/ping", handler.Ping)
-
+		
 		auth := api.Group("/auth")
 		{
 			auth.POST("/register", authH.Register)

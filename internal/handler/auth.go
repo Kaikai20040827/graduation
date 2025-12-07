@@ -3,7 +3,7 @@ package handler
 import (
 	"strconv"
 	"net/http"
-
+	"fmt"
 	"github.com/Kaikai20040827/graduation/internal/config"
 	"github.com/Kaikai20040827/graduation/internal/middleware"
 	"github.com/Kaikai20040827/graduation/internal/pkg"
@@ -17,6 +17,7 @@ type AuthHandler struct {
 }
 
 func NewAuthHandler(usersrv *service.UserService, jwtcfg *config.JWTConfig) *AuthHandler {
+	fmt.Println("✓ Creating a new authorization handler done")
 	return &AuthHandler{
 		userSrv: usersrv,
 		jwtCfg:  jwtcfg,
