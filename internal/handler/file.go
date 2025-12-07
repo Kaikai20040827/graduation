@@ -1,3 +1,89 @@
 package handler
 
+import(
+	"github.com/gin-gonic/gin"
+	"net/http"
+	"strconv"
+	"path/filepath"
+	"github.com/Kaikai20040827/graduation/internal/pkg"
+	"github.com/Kaikai20040827/graduation/internal/service"
+)	
+
+type FileHandler struct {
+	fileSrv *service.FileService
+}
+
+func NewFileHandler(fs *service.FileService) *FileHandler {
+	return &FileHandler{fileSrv: fs}
+}
+
+//以下代码可能存在漏洞，需要检查
+// Upload
+func (h *FileHandler) UploadFile(c *gin.Context) {
+	uidv, _ := c.Get("user_id")
+	uid := uidv.(uint)
+
+	fileHeader, err := c.FormFile("file")
+	if err != nil {
+		pkg.JSONError(c, 40001, "file required")
+		return
+	}
+	f, err := fileHeader.Open()
+	if err != nil {
+		pkg.JSONError(c, 50001, "open file failed")
+		return
+	}
+	defer f.Close()
+
+	desc := c.PostForm("description")
+	// save
+	out, err := h.fileSrv.UploadFile(f, filepath.Base(fileHeader.Filename), uid, desc)
+	if err != nil {
+		pkg.JSONError(c, 50002, err.Error())
+		return
+	}
+	out_ID, _ := strconv.Atoi(out.ID)
+
+	pkg.JSONOK(c, gin.H{
+		"file_id": out.ID,
+		"filename": out.Filename,
+		"size": out.Size,
+		"url": "/api/v1/files/download/" + strconv.FormatUint(uint64(out_ID), 10),
+	})
+}
+
+// List
+func (h *FileHandler) ListFiles(c *gin.Context) {
+	page, size := pkg.GetPageParams(c)
+	total, files, err := h.fileSrv.ListFiles(page, size)
+	if err != nil {
+		pkg.JSONError(c, 50001, err.Error())
+		return
+	}
+	pkg.JSONOK(c, gin.H{"total": total, "items": files})
+}
+
+// Download
+func (h *FileHandler) DownloadFile(c *gin.Context) {
+	idStr := c.Param("id")
+	id, _ := strconv.Atoi(idStr)
+	f, err := h.fileSrv.GetFileByID(uint(id))
+	if err != nil {
+		pkg.JSONError(c, 404, "file not found")
+		return
+	}
+	c.Header("Content-Disposition", "attachment; filename=\""+f.Filename+"\"")
+	c.File(f.StoragePath)
+}
+
+// Delete
+func (h *FileHandler) DeleteFile(c *gin.Context) {
+	idStr := c.Param("id")
+	id, _ := strconv.Atoi(idStr)
+	if err := h.fileSrv.DeleteFile(uint(id)); err != nil {
+		pkg.JSONError(c, 50001, err.Error())
+		return
+	}
+	c.Status(http.StatusNoContent)
+}
 
