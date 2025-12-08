@@ -11,7 +11,6 @@ import (
 	"github.com/Kaikai20040827/graduation/internal/routes"
 	"github.com/Kaikai20040827/graduation/internal/service"
 
-	"github.com/gin-gonic/gin"
 )
 
 const (
@@ -74,7 +73,8 @@ func main() {
 
 	// 6. Gin
 	fmt.Println("-----Starting initializing Gin framework-----")
-	r := gin.Default()
+	r := routes.SetupRouter()
+
 	fmt.Println("-----Initialized Gin framework successfully-----")
 	fmt.Println("")
 
@@ -85,7 +85,7 @@ func main() {
 	fmt.Println("")
 
 	// 8. 启动
-	port:= strconv.Itoa(cfg.Server.Port)
+	port := strconv.Itoa(cfg.Server.Port)
 	host := cfg.Server.Host
 	addr := host + ":" + port
 	log.Println("server running at", addr)

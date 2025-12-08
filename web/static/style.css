@@ -451,3 +451,12 @@ main .timetable.active .closeBtn{
         padding: 2rem;
     }
 }
+
+.settings-container {
+    color: var(--color-background)
+    
+}
+.settings-container:hover {
+    color: grey
+    
+}

@@ -48,7 +48,6 @@ type Config struct {
 
 func LoadConfig() (*Config, error) {
 	v := viper.New()
-
 	// 配置文件名
 	v.SetConfigName("config")
 	v.SetConfigType("yaml")
