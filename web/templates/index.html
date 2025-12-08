@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,6 +10,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
     <link rel="stylesheet" href="../static/style.css">
 </head>
+
 <body>
     <header>
         <div class="logo" title="University Management System">
@@ -16,19 +18,19 @@
             <h2>U<span class="danger">M</span>S</h2>
         </div>
         <div class="navbar">
-            <a href="index.html" class="active">
+            <a href="/index" class="active">
                 <span class="material-icons-sharp">home</span>
                 <h3>Home</h3>
             </a>
-            <a href="timetable.html" onclick="timeTableAll()">
+            <a href="/timetable" onclick="timeTableAll()">
                 <span class="material-icons-sharp">today</span>
                 <h3>Time Table</h3>
-            </a> 
-            <a href="exam.html">
+            </a>
+            <a href="/exam">
                 <span class="material-icons-sharp">grid_view</span>
                 <h3>Examination</h3>
             </a>
-            <a href="password.html">
+            <a href="/password">
                 <span class="material-icons-sharp">password</span>
                 <h3>Change Password</h3>
             </a>
@@ -44,7 +46,7 @@
             <span class="material-icons-sharp active">light_mode</span>
             <span class="material-icons-sharp">dark_mode</span>
         </div>
-        
+
     </header>
     <div class="container">
         <aside>
@@ -72,9 +74,9 @@
                     <h5>
                         <div class=""></div>
                         <div class="material-icons-sharp">settings</div>
-                        <a class="about" href="settings.html">Settings</a>
+                        <a class="about" href="/settings">Settings</a>
                     </h5>
-                    
+
                 </div>
             </div>
         </aside>
@@ -87,8 +89,12 @@
                     <h3>Engineering Graphics</h3>
                     <h2>12/14</h2>
                     <div class="progress">
-                        <svg><circle cx="38" cy="38" r="36"></circle></svg>
-                        <div class="number"><p>86%</p></div>
+                        <svg>
+                            <circle cx="38" cy="38" r="36"></circle>
+                        </svg>
+                        <div class="number">
+                            <p>86%</p>
+                        </div>
                     </div>
                     <small class="text-muted">Last 24 Hours</small>
                 </div>
@@ -97,8 +103,12 @@
                     <h3>Mathematical Engineering</h3>
                     <h2>27/29</h2>
                     <div class="progress">
-                        <svg><circle cx="38" cy="38" r="36"></circle></svg>
-                        <div class="number"><p>93%</p></div>
+                        <svg>
+                            <circle cx="38" cy="38" r="36"></circle>
+                        </svg>
+                        <div class="number">
+                            <p>93%</p>
+                        </div>
                     </div>
                     <small class="text-muted">Last 24 Hours</small>
                 </div>
@@ -107,8 +117,12 @@
                     <h3>Computer Architecture</h3>
                     <h2>27/30</h2>
                     <div class="progress">
-                        <svg><circle cx="38" cy="38" r="36"></circle></svg>
-                        <div class="number"><p>81%</p></div>
+                        <svg>
+                            <circle cx="38" cy="38" r="36"></circle>
+                        </svg>
+                        <div class="number">
+                            <p>81%</p>
+                        </div>
                     </div>
                     <small class="text-muted">Last 24 Hours</small>
                 </div>
@@ -117,8 +131,12 @@
                     <h3>Database Management</h3>
                     <h2>24/25</h2>
                     <div class="progress">
-                        <svg><circle cx="38" cy="38" r="36"></circle></svg>
-                        <div class="number"><p>96%</p></div>
+                        <svg>
+                            <circle cx="38" cy="38" r="36"></circle>
+                        </svg>
+                        <div class="number">
+                            <p>96%</p>
+                        </div>
                     </div>
                     <small class="text-muted">Last 24 Hours</small>
                 </div>
@@ -127,8 +145,12 @@
                     <h3>Network Security</h3>
                     <h2>25/27</h2>
                     <div class="progress">
-                        <svg><circle cx="38" cy="38" r="36"></circle></svg>
-                        <div class="number"><p>92%</p></div>
+                        <svg>
+                            <circle cx="38" cy="38" r="36"></circle>
+                        </svg>
+                        <div class="number">
+                            <p>92%</p>
+                        </div>
                     </div>
                     <small class="text-muted">Last 24 Hours</small>
                 </div>
@@ -174,6 +196,15 @@
                 </div>
             </div>
 
+            <div class="upload" style="margin-top:16px; padding:12px; border:1px solid #eee; border-radius:6px;">
+                <h2>Upload File</h2>
+                <input type="file" id="fileInput">
+                <input type="text" id="fileDesc" placeholder="Description"
+                    style="display:block; margin-top:8px; width:100%;">
+                <button id="uploadBtn" style="margin-top:8px;">Upload</button>
+                <div id="uploadResult" style="margin-top:8px; color:#333;"></div>
+            </div>
+
             <div class="leaves">
                 <h2>Teachers on leave</h2>
                 <div class="teacher">
@@ -205,4 +236,5 @@
     <script src="../static/timeTable.js"></script>
     <script src="../static/app.js"></script>
 </body>
+
 </html>

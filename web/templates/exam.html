@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,9 +11,15 @@
     <link rel="stylesheet" href="../static/style.css">
 
     <style>
-        body{overflow: hidden;}
-        header{position: relative;}
-        .exam{
+        body {
+            overflow: hidden;
+        }
+
+        header {
+            position: relative;
+        }
+
+        .exam {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -23,6 +30,7 @@
         }
     </style>
 </head>
+
 <body>
     <header>
         <div class="logo">
@@ -30,19 +38,19 @@
             <h2>U<span class="danger">M</span>S</h2>
         </div>
         <div class="navbar">
-            <a href="index.html">
+            <a href="/index">
                 <span class="material-icons-sharp">home</span>
                 <h3>Home</h3>
             </a>
-            <a href="timetable.html" onclick="timeTableAll()">
+            <a href="/timetable" onclick="timeTableAll()">
                 <span class="material-icons-sharp">today</span>
                 <h3>Time Table</h3>
-            </a> 
-            <a href="exam.html" class="active">
+            </a>
+            <a href="/exam" class="active">
                 <span class="material-icons-sharp">grid_view</span>
                 <h3>Examination</h3>
             </a>
-            <a href="password.html">
+            <a href="/password">
                 <span class="material-icons-sharp">password</span>
                 <h3>Change Password</h3>
             </a>
@@ -112,4 +120,5 @@
 </body>
 
 <script src="../static/app.js"></script>
+
 </html>
