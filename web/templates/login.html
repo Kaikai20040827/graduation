@@ -164,19 +164,19 @@
 
 
         <div class="input-field">
-            <label for="userid">User ID</label>
-            <input type="text" id="userid" name="userid" placeholder="Enter your User ID" required>
+            <label for="email">Email</label>
+            <input type="text" id="email" name="email" placeholder="Enter your Email" required>
         </div>
 
         <div class="input-field">
             <label for="password">Password</label>
-            <input type="password" id="password" name="password" placeholder="Enter your Password" required>
+            <input type="text" id="password" name="password" placeholder="Enter your Password" required>
         </div>
 
 
 
         <span>
-            <form onsubmit="login(); return false;">
+            <form onsubmit="login(); return true;">
                 <button type="submit" class="btn-login">
                     Log in
                 </button>

@@ -6,7 +6,7 @@ import (
 )
 
 type User struct {
-	ID        string         `gorm:"primarykey" json:"id"`
+	ID        uint         `gorm:"primarykey" json:"id"`
 	Email     string         `gorm:"uniqueIndex;size:255" json:"email"`
 	Username  string         `gorm:"size:100" json:"username"`
 	Password  string         `gorm:"size:255" json:"-"`
@@ -16,7 +16,7 @@ type User struct {
 }
 
 type File struct {
-	ID          string         `gorm:"primarykey" json:"id"`
+	ID          uint         `gorm:"primarykey" json:"id"`
 	Filename    string         `gorm:"size:512" json:"filename"`
 	StoragePath string         `gorm:"size:1024" json:"-"`
 	Size        int64          `json:"size"`

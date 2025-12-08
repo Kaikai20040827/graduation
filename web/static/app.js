@@ -6,9 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const prevDay = document.getElementById('prevDay');
 
     // Profile button toggle for side menu
-    profileBtn.onclick = function () {
-        sideMenu.classList.toggle('active');
-    }
+    // profileBtn.onclick = function () {
+    //     sideMenu.classList.toggle('active');
+    // }
 
     // Scroll event to remove side menu and add/remove header active class
     window.onscroll = () => {
@@ -155,32 +155,34 @@ function register() {
 
 }
 
-function login() {
-    const data = {
-        username: document.getElementById("userid") && document.getElementById("userid").value,
-        password: document.getElementById("password") && document.getElementById("password").value
-    };
+// 检查前端登录请求代码，可能的问题：
+async function login(email, password) {
+    try {
+        const response = await fetch('/api/v1/auth/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: email,
+                password: password
+            }),
+        });
 
-    fetch(API_BASE + "/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-    })
-        .then(res => res.json())
-        .then(result => {
-            document.getElementById("loginResult").innerText = JSON.stringify(result);
-            if (isSuccess(result) && result.data && result.data.token) {
-                // save token for later use
-                localStorage.setItem('token', result.data.token)
-                window.location.href = '/index'
-            } else {
-                alert(result.message || '登录失败')
-            }
-        })
-        .catch(err => {
-            console.error(err)
-            alert('登录请求失败')
-        })
+        // 添加这行来调试
+        console.log('Response status:', response.status);
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(`HTTP错误: ${response.status}, 消息: ${errorData.message}`);
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('登录失败:', error.message);
+        throw error;
+    }
 }
 
 // Public file upload (uses public endpoint added to backend)

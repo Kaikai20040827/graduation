@@ -45,13 +45,12 @@ func (h *FileHandler) UploadFile(c *gin.Context) {
 		pkg.JSONError(c, 50002, err.Error())
 		return
 	}
-	out_ID, _ := strconv.Atoi(out.ID)
 
 	pkg.JSONOK(c, gin.H{
 		"file_id":  out.ID,
 		"filename": out.Filename,
 		"size":     out.Size,
-		"url":      "/api/v1/files/download/" + strconv.FormatUint(uint64(out_ID), 10),
+		"url":      "/api/v1/files/download/" + strconv.FormatUint(uint64(out.ID), 10),
 	})
 }
 
@@ -76,7 +75,7 @@ func (h *FileHandler) UploadFilePublic(c *gin.Context) {
 		pkg.JSONError(c, 50002, err.Error())
 		return
 	}
-	out_ID, _ := strconv.Atoi(out.ID)
+	out_ID := out.ID
 
 	pkg.JSONOK(c, gin.H{
 		"file_id":  out.ID,

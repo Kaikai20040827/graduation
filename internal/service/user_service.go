@@ -2,10 +2,10 @@ package service
 
 import (
 	"errors"
-	"time"
 	"fmt"
 	"github.com/Kaikai20040827/graduation/internal/model"
 	"github.com/Kaikai20040827/graduation/internal/pkg"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -17,13 +17,13 @@ type UserService struct {
 func NewUserService(db *gorm.DB) *UserService {
 	fmt.Println("✓ Creating a new user service done")
 	return &UserService{db: db}
-	
+
 }
 
 func (s *UserService) CreateUser(username string, email string, password string) (*model.User, error) {
 	//检查邮箱是否注册
 	var count int64
-	s.db.Model(&model.User{}).Where("email = ?").Count(&count)
+	s.db.Model(&model.User{}).Where("email = ?", email).Count(&count)
 
 	//邮箱已注册
 	if count > 0 {
@@ -38,9 +38,9 @@ func (s *UserService) CreateUser(username string, email string, password string)
 
 	//创建用户
 	user := &model.User{
-		Email:    email,
-		Username: username,
-		Password: hashedPwd,
+		Email:     email,
+		Username:  username,
+		Password:  hashedPwd,
 		CreatedAt: time.Now(),
 	}
 
@@ -51,24 +51,23 @@ func (s *UserService) CreateUser(username string, email string, password string)
 
 	// 将返回给调用方的用户对象中的密码字段清空，
 	// 以避免将密码（即使是哈希后的密码）暴露给外部调用者
-	user.Password = "" 
+	user.Password = ""
 
 	return user, nil
 }
 
 func (s *UserService) DeleteUser(username string, inputPassword string) error {
 	var count int64
-	s.db.Model(&model.User{}).Where("Username = ?").Count(&count)
+	s.db.Model(&model.User{}).Where("Username = ?", username).Count(&count)
 
-	if count != 0 {
+	if count == 0 {
 		return errors.New("user does not exist")
 	}
-	
-	
+
 	var user *model.User
 	s.db.Model(&model.User{}).Where("Username = ?", username).Find(&user)
-	
-	if user.Password != inputPassword {
+	hashedPassword, _ := pkg.HashPassword(inputPassword)
+	if user.Password != hashedPassword {
 		return errors.New("incorrect password")
 	}
 
@@ -82,9 +81,9 @@ func (s *UserService) DeleteUser(username string, inputPassword string) error {
 // oldPassword should be input by users
 func (s *UserService) ChangePassword(email string, oldPassword string, newPassword string) error {
 	var count int64
-	s.db.Model(&model.User{}).Where("Username = ?").Count(&count)
+	s.db.Model(&model.User{}).Where("Email = ?", email).Count(&count)
 
-	if count != 0 {
+	if count == 0 {
 		return errors.New("user does not exist")
 	}
 
@@ -108,9 +107,9 @@ func (s *UserService) ChangePassword(email string, oldPassword string, newPasswo
 
 func (s *UserService) ChangeUsername(email string, newUsername string) error {
 	var count int64
-	s.db.Model(&model.User{}).Where("Username = ?").Count(&count)
+	s.db.Model(&model.User{}).Where("Username = ?", newUsername).Count(&count)
 
-	if count != 0 {
+	if count == 0 {
 		return errors.New("user does not exist")
 	}
 
@@ -122,7 +121,6 @@ func (s *UserService) ChangeUsername(email string, newUsername string) error {
 
 	return s.db.Save(&user).Error
 }
-
 
 func (s *UserService) Authenticate(email, password string) (*model.User, error) {
 	var u model.User

@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"strconv"
 	"net/http"
 	"fmt"
 	"github.com/Kaikai20040827/graduation/internal/config"
@@ -32,7 +31,7 @@ type RegisterReq struct {
 
 func (h *AuthHandler) Register(context *gin.Context) {
 	var req RegisterReq
-	if err := context.ShouldBindBodyWithJSON(&req); err != nil {
+	if err := context.ShouldBindJSON(&req); err != nil {
 		pkg.JSONError(context, 40001, "failed to bind")
 		context.Abort()
 		return 
@@ -62,12 +61,13 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		pkg.JSONError(c, 40101, "invalid credentials")
 		return
 	}
-	user_id, _ := strconv.Atoi(u.ID)
+	user_id := u.ID
 	token, err := middleware.GenerateToken(h.jwtCfg, uint(user_id))
 	if err != nil {
 		pkg.JSONError(c, 50001, "token gen failed")
 		return
 	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"code":    0,
 		"message": "ok",
