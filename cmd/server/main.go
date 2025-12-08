@@ -83,7 +83,7 @@ func main() {
 	routes.RegisterAPIRoutes(r, authH, userH, fileH, &cfg.JWT)
 	fmt.Println("-----Initialized API successfully-----")
 	fmt.Println("")
-
+	
 	// 8. 启动
 	port := strconv.Itoa(cfg.Server.Port)
 	host := cfg.Server.Host

@@ -1,9 +1,9 @@
 package routes
 
 import (
-	"runtime"
 	"path/filepath"
-	
+	"runtime"
+
 	"github.com/Kaikai20040827/graduation/internal/config"
 	"github.com/Kaikai20040827/graduation/internal/handler"
 	"github.com/Kaikai20040827/graduation/internal/middleware"
@@ -25,7 +25,10 @@ func RegisterAPIRoutes(
 	// 公共 API
 	{
 		api.GET("/ping", handler.Ping)
-		
+
+		// 公共文件上传（无需认证，供前端测试或匿名上传使用）
+		api.POST("/files/public/upload", fileH.UploadFilePublic)
+
 		auth := api.Group("/auth")
 		{
 			auth.POST("/register", authH.Register)
@@ -51,52 +54,60 @@ func RegisterAPIRoutes(
 }
 
 func SetupRouter() *gin.Engine {
-    r := gin.Default()
-    
-    // 获取项目根目录（更可靠的方式）
-    _, filename, _, _ := runtime.Caller(0)
-    projectRoot := filepath.Dir(filepath.Dir(filepath.Dir(filename)))
-    
-    webStaticPath := filepath.Join(projectRoot, "web", "static")
-    webTemplatesPath := filepath.Join(projectRoot, "web", "templates")
-    webImagesPath := filepath.Join(projectRoot, "web", "static", "images")
-    
-    // 静态文件服务
-    r.Static("/static", webStaticPath)
-    
-    // HTML 页面路由
-    r.GET("/", func(c *gin.Context) {
-        c.File(filepath.Join(webTemplatesPath, "login.html"))
-    })
-    
-    r.GET("/logo", func(c *gin.Context) {
-        c.File(filepath.Join(webImagesPath, "logo.png"))
-    })
-    
-    r.GET("/index", func(c *gin.Context) {
-        c.File(filepath.Join(webTemplatesPath, "index.html"))
-    })
-    
-    r.GET("/register", func(c *gin.Context) {
-        c.File(filepath.Join(webTemplatesPath, "register.html"))
-    })
-    
-    r.GET("/dashboard", func(c *gin.Context) {
-        c.File(filepath.Join(webTemplatesPath, "dashboard.html"))
-    })
-    
-    r.GET("/exam", func(c *gin.Context) {
-        c.File(filepath.Join(webTemplatesPath, "exam.html"))
-    })
-    
-    r.GET("/timetable", func(c *gin.Context) {
-        c.File(filepath.Join(webTemplatesPath, "timetable.html"))
-    })
-    
-    // API 路由
-    r.GET("/ping", handler.Ping)
-    
-    // 可以继续添加其他API路由
-    
-    return r
+	r := gin.Default()
+
+	// 获取项目根目录（更可靠的方式）
+	_, filename, _, _ := runtime.Caller(0)
+	projectRoot := filepath.Dir(filepath.Dir(filepath.Dir(filename)))
+
+	webStaticPath := filepath.Join(projectRoot, "web", "static")
+	webTemplatesPath := filepath.Join(projectRoot, "web", "templates")
+	webImagesPath := filepath.Join(projectRoot, "web", "static", "images")
+
+	// 静态文件服务
+	r.Static("/static", webStaticPath)
+
+	// HTML 页面路由
+	r.GET("/", func(c *gin.Context) {
+		c.File(filepath.Join(webTemplatesPath, "login.html"))
+	})
+
+	r.GET("/register", func(c *gin.Context) {
+		c.File(filepath.Join(webTemplatesPath, "signup.html"))
+	})
+
+	r.GET("/logo", func(c *gin.Context) {
+		c.File(filepath.Join(webImagesPath, "logo.png"))
+	})
+
+	r.GET("/index", func(c *gin.Context) {
+		c.File(filepath.Join(webTemplatesPath, "index.html"))
+	})
+
+	r.GET("/exam", func(c *gin.Context) {
+		c.File(filepath.Join(webTemplatesPath, "exam.html"))
+	})
+
+	r.GET("/timetable", func(c *gin.Context) {
+		c.File(filepath.Join(webTemplatesPath, "timetable.html"))
+	})
+
+	r.GET("/password", func(c *gin.Context) {
+		c.File(filepath.Join(webTemplatesPath, "password.html"))
+	})
+
+	r.GET("/settings", func(c *gin.Context) {
+		c.File(filepath.Join(webTemplatesPath, "settings.html"))
+	})
+
+	r.GET("/register_result", func(c *gin.Context) {
+		c.File(filepath.Join(webTemplatesPath, "register_result.html"))
+	})
+
+	// API 路由
+	r.GET("/ping", handler.Ping)
+
+	// 可以继续添加其他API路由
+
+	return r
 }

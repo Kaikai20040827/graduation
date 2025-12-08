@@ -1,14 +1,15 @@
 package handler
 
-import(
-	"github.com/gin-gonic/gin"
-	"net/http"
+import (
 	"fmt"
-	"strconv"
+	"net/http"
 	"path/filepath"
+	"strconv"
+
 	"github.com/Kaikai20040827/graduation/internal/pkg"
 	"github.com/Kaikai20040827/graduation/internal/service"
-)	
+	"github.com/gin-gonic/gin"
+)
 
 type FileHandler struct {
 	fileSrv *service.FileService
@@ -19,7 +20,7 @@ func NewFileHandler(fs *service.FileService) *FileHandler {
 	return &FileHandler{fileSrv: fs}
 }
 
-//以下代码可能存在漏洞，需要检查
+// 以下代码可能存在漏洞，需要检查
 // Upload
 func (h *FileHandler) UploadFile(c *gin.Context) {
 	uidv, _ := c.Get("user_id")
@@ -47,10 +48,41 @@ func (h *FileHandler) UploadFile(c *gin.Context) {
 	out_ID, _ := strconv.Atoi(out.ID)
 
 	pkg.JSONOK(c, gin.H{
-		"file_id": out.ID,
+		"file_id":  out.ID,
 		"filename": out.Filename,
-		"size": out.Size,
-		"url": "/api/v1/files/download/" + strconv.FormatUint(uint64(out_ID), 10),
+		"size":     out.Size,
+		"url":      "/api/v1/files/download/" + strconv.FormatUint(uint64(out_ID), 10),
+	})
+}
+
+// UploadFilePublic allows anonymous/public uploads (no JWT required).
+func (h *FileHandler) UploadFilePublic(c *gin.Context) {
+	fileHeader, err := c.FormFile("file")
+	if err != nil {
+		pkg.JSONError(c, 40001, "file required")
+		return
+	}
+	f, err := fileHeader.Open()
+	if err != nil {
+		pkg.JSONError(c, 50001, "open file failed")
+		return
+	}
+	defer f.Close()
+
+	desc := c.PostForm("description")
+	// use uploader id 0 for public uploads
+	out, err := h.fileSrv.UploadFile(f, filepath.Base(fileHeader.Filename), 0, desc)
+	if err != nil {
+		pkg.JSONError(c, 50002, err.Error())
+		return
+	}
+	out_ID, _ := strconv.Atoi(out.ID)
+
+	pkg.JSONOK(c, gin.H{
+		"file_id":  out.ID,
+		"filename": out.Filename,
+		"size":     out.Size,
+		"url":      "/api/v1/files/download/" + strconv.FormatUint(uint64(out_ID), 10),
 	})
 }
 
@@ -88,4 +120,3 @@ func (h *FileHandler) DeleteFile(c *gin.Context) {
 	}
 	c.Status(http.StatusNoContent)
 }
-
