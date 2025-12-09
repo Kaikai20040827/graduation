@@ -1,3 +1,18 @@
+function logout() {
+    if (confirm('确定要退出登录吗？')) {
+        // 清除本地存储的登录信息
+        localStorage.setItem('justLoggedOut', 'true');
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('userEmail');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('userName');
+
+        // 跳转到登录页
+        localStorage.clear()
+        window.location.href = '/';
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const sideMenu = document.querySelector("aside");
     const profileBtn = document.querySelector("#profile-btn");
@@ -148,3 +163,5 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     });
 });
+
+
