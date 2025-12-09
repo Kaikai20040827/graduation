@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"net/http"
 	"fmt"
+
 	"github.com/Kaikai20040827/graduation/internal/config"
 	"github.com/Kaikai20040827/graduation/internal/middleware"
 	"github.com/Kaikai20040827/graduation/internal/pkg"
@@ -34,13 +34,13 @@ func (h *AuthHandler) Register(context *gin.Context) {
 	if err := context.ShouldBindJSON(&req); err != nil {
 		pkg.JSONError(context, 40001, "failed to bind")
 		context.Abort()
-		return 
+		return
 	}
 	user, err := h.userSrv.CreateUser(req.Username, req.Email, req.Password)
-	if err!=nil{
+	if err != nil {
 		pkg.JSONError(context, 40002, "failed to create user")
 		context.Abort()
-		return 
+		return
 	}
 	pkg.JSONOK(context, user)
 }
@@ -53,28 +53,23 @@ type LoginReq struct {
 func (h *AuthHandler) Login(c *gin.Context) {
 	var req LoginReq
 	if err := c.ShouldBindJSON(&req); err != nil {
-		pkg.JSONError(c, 40001, "invalid params")
+		pkg.JSONError(c, 400, "invalid params")
 		return
 	}
 	u, err := h.userSrv.Authenticate(req.Email, req.Password)
 	if err != nil {
-		pkg.JSONError(c, 40101, "invalid credentials")
+		pkg.JSONError(c, 401, "invalid credentials")
 		return
 	}
 	user_id := u.ID
 	token, err := middleware.GenerateToken(h.jwtCfg, uint(user_id))
 	if err != nil {
-		pkg.JSONError(c, 50001, "token gen failed")
+		pkg.JSONError(c, 500, "token gen failed")
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"code":    0,
-		"message": "ok",
-		"data": gin.H{
-			"token":   token,
-			"expires": 0,
-			"user":    u,
-		},
-	})
+	pkg.JSONOK(c, gin.H{
+		"token":   token,
+		"expires": 0,
+		"user":    u})
 }
