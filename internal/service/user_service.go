@@ -140,6 +140,16 @@ func (s *UserService) GetByID(id uint) (*model.User, error) {
 		return nil, err
 	}
 	u.Password = ""
+	return &u,
+	 nil
+}
+
+func (s *UserService) GetByUsername(username string) (*model.User, error) {
+	var u model.User
+	if err := s.db.First(&u, username).Error; err != nil {
+		return nil, err
+	}
+	u.Password = ""
 	return &u, nil
 }
 
@@ -153,5 +163,6 @@ func (s *UserService) UpdateProfile(id uint, username string) (*model.User, erro
 		return nil, err
 	}
 	u.Password = ""
+
 	return &u, nil
 }

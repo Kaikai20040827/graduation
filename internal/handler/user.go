@@ -21,15 +21,14 @@ func NewUserHandler(us *service.UserService) *UserHandler {
 }
 
 func (uh *UserHandler) GetProfile(context *gin.Context) {
-	user_id, ok := context.Get("user_id")
+	username, ok := context.Get("username")
 	if !ok {
 		pkg.JSONError(context, 401, "unauthorized")
 		context.Abort()
 		return
 	}
-	//如果是uint就赋值，不是就panic
-	uid := user_id.(uint)
-	user, err := uh.userSrv.GetByID(uid)
+	
+	user, err := uh.userSrv.GetByUsername(username.(string))
 	if err != nil {
 		pkg.JSONError(context, 404, "cannot find user")
 		context.Abort()
