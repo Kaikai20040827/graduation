@@ -25,16 +25,20 @@
 ```
   git clone <repository-url>
 ``` 
-2) 进入项目根目录并设置配置文件 `config.yaml`（根据环境调整数据库、端口等）。
+2) 进入项目根目录并设置配置文件 `config.yaml`（根据环境调整数据库、端口、密码等）。
+jwt.secret 为 base64 编码加密
 
-3) 下载数据库: MySQL Workbench => https://dev.mysql.com/downloads/workbench/
+3) 下载数据库: MySQL Workbench => https://dev.mysql.com/downloads/workbench/  
+创建一个名字为 "secure_file_box" 的数据库
 
-4) 构建后端：
-```
+4) 构建后端：  
+先在config.yaml的password那一行内容换成自己的数据库密码
+``` 
   go build -o ./bin/app ./server
-```
-或直接运行：
-```
+``` 
+
+  或直接运行：
+``` 
   go run ./server/main.go
 ```
 # 5. 运行
@@ -45,9 +49,10 @@
   2. 执行 `go run ./server/main.go` 或运行编译后的可执行文件 `./bin/app`。
   3. 访问浏览器：`http://localhost:<port>`（端口在 `config.yaml` 中配置）。
 
-# 6. 配置说明
+# 6. 配置说明 🔧
 
 - 请编辑根目录的 `config.yaml`，主要配置项通常包括：服务端口、数据库连接字符串、JWT 密钥、上传目录等。
+- JWT 密钥：请在 `config.yaml` 的 `jwt.secret` 字段中设置一个强随机密钥，并避免将其提交到版本控制。
 
 # 7. 使用说明（主要功能）
 
@@ -112,18 +117,21 @@ This project is a web application for managing course/exam timetables. The backe
 ```
    git clone <repository-url>
 ```
-2) Configure `config.yaml` in the project root (adjust DB, port, JWT keys, etc.).
+2) Configure `config.yaml` in the project root (adjust DB, port, password, etc.).  
+jwt.secret is from base64 encoding encryption
 
-3) Download database: MySQL Workbench => https://dev.mysql.com/downloads/workbench/
+3) Download database: MySQL Workbench => https://dev.mysql.com/downloads/workbench/  
+Create a database named "secure_file_box"
 
-4) Build the backend:
-
+4) Build the backend:  
+Change the content behind the line named "password" into your own database password
+```
    go build -o ./bin/app ./server
-
+```
 Or run directly:
-
+```
    go run ./server/main.go
-
+```
 # 5. Running the App
 
 - Local development:
@@ -132,9 +140,10 @@ Or run directly:
   2. Run `go run ./server/main.go` or execute the built binary `./bin/app`.
   3. Open browser at `http://localhost:<port>` (port from `config.yaml`).
 
-# 6. Configuration
+# 6. Configuration 🔧
 
 - Edit `config.yaml` for main settings: server port, DB connection, JWT secret, upload paths, etc.
+- JWT secret: set a strong random key in `config.yaml` under `jwt.secret` and avoid committing it to version control.
 
 # 7. Usage (main features)
 

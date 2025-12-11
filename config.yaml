@@ -1,25 +1,19 @@
-# 服务器配置
-server:
-  app_name: secure_file_box
-  env: development
-  debug: true
-  host: 127.0.0.1
-  port: 8080
-  time_zone: Asia/Shanghai
-
-# 数据库配置
 database:
-  driver: mysql
-  host: localhost
-  port: 3306
-  user: root
-  password: "0827"
-  name: secure_file_box
-  debug: true
-
-# JWT 认证配置
+    debug: true
+    driver: mysql
+    host: localhost
+    name: secure_file_box
+    password: "0827"
+    port: 3306
+    user: root
 jwt:
-  secret: "3696f2f8-f872-4588-93a1-838df43e30c0" #32位 用[guid]::NewGuid().ToString()
-
-  issuer: secure_file_box
-  audience: your-app
+    audience: secure_file_box
+    issuer: secure_file_box
+    secret: KQQnxzmQdBIQT1EdZTxXU-uCx5RFE03BeJD9s6eVNW8 #jwt secret key, using 
+server:
+    app_name: secure_file_box
+    debug: true
+    env: development
+    host: 127.0.0.1
+    port: 8080
+    time_zone: Asia/Shanghai

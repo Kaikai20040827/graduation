@@ -1,6 +1,8 @@
 package config
 
 import (
+	"crypto/rand"
+	"encoding/base64"
 	"fmt"
 	"strings"
 
@@ -68,6 +70,11 @@ func LoadConfig() (*Config, error) {
 		fmt.Printf("✓ Using config file: %s, not using default configuration\n", v.ConfigFileUsed())
 	}
 
+	// 确保 jwt.secret 存在且强度足够，否则生成并写入配置文件
+	if err := EnsureJWTSecret(v); err != nil {
+		return nil, fmt.Errorf("无法生成/写入 jwt.secret: %w", err)
+	}
+
 	var cfg Config
 	if err := v.Unmarshal(&cfg); err != nil {
 		return nil, fmt.Errorf("解析配置失败: %w", err)
@@ -95,8 +102,8 @@ func setDefaults(v *viper.Viper) {
 	v.SetDefault("database.host", "localhost")
 	v.SetDefault("database.port", 3306)
 	v.SetDefault("database.user", "root")
-	v.SetDefault("database.password", "0827")
-	v.SetDefault("database.name", "secure_file_box")
+	v.SetDefault("database.password", "123456")      // you own password, change it
+	v.SetDefault("database.name", "secure_file_box") //create database with name "secure_file_box"
 	v.SetDefault("database.debug", false)
 
 	v.SetDefault("jwt.secret", "PLEASE_CHANGE_ME_32_CHARS_MINIMUM")
@@ -114,7 +121,43 @@ func validateConfig(cfg *Config) error {
 	return nil
 }
 
-//函数使用计数器
+// GenerateJWTSecret 生成一个高强度的随机字符串，使用 base64 URL-safe 编码。
+// 参数 nBytes 指定随机字节数，推荐至少 32（256 bits）。
+// base64 encoding
+func GenerateJWTSecret(nBytes int) (string, error) {
+	if nBytes <= 0 {
+		nBytes = 32
+	}
+	b := make([]byte, nBytes)
+	if _, err := rand.Read(b); err != nil {
+		return "", err
+	}
+	// 使用 RawURLEncoding 去掉 padding，使字符串在 URL/headers 中更安全
+	return base64.RawURLEncoding.EncodeToString(b), nil
+}
+
+// EnsureJWTSecret 检查 viper 中的 jwt.secret，若缺失或强度不足则生成并写回配置文件。
+func EnsureJWTSecret(v *viper.Viper) error {
+	cur := v.GetString("jwt.secret")
+	if len(cur) >= 32 && cur != "PLEASE_CHANGE_ME_32_CHARS_MINIMUM" {
+		return nil
+	}
+
+	secret, err := GenerateJWTSecret(32) // 32 bytes = 256 bits, 可写33，34...等更高
+	if err != nil {
+		return err
+	}
+
+	v.Set("jwt.secret", secret)
+
+	// 如果已经加载了配置文件，写回同一文件；否则在运行目录写入 config.yaml
+	if v.ConfigFileUsed() != "" {
+		return v.WriteConfig() // 覆盖原有配置文件
+	}
+	return v.WriteConfigAs("config.yaml")
+}
+
+// 函数使用计数器
 func NewFuncCounters() *FuncCounters {
 	return &FuncCounters{
 		ConfigLoadingFuncCounter: 0,
