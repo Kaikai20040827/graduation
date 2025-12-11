@@ -15,7 +15,7 @@
 
 # 3. 前置要求
 
-- Go 1.18+（或本项目指定的最低 Go 版本）。
+- Go 1.18+（或本项目指定的最低 Go 版本）。 => https://go.dev/doc/install
 - 可选：Node.js（若需对前端资源进行打包/构建）。
 - 数据库：请参考 `config.yaml` 中的配置（可能使用本地或远程数据库）。
 
@@ -27,7 +27,9 @@
 ``` 
 2) 进入项目根目录并设置配置文件 `config.yaml`（根据环境调整数据库、端口等）。
 
-3) 构建后端：
+3) 下载数据库: MySQL Workbench => https://dev.mysql.com/downloads/workbench/
+
+4) 构建后端：
 ```
   go build -o ./bin/app ./server
 ```
@@ -54,7 +56,7 @@
 - 文件：支持文件上传、存储管理及下载接口。
 - 管理接口：健康检查、系统信息与日志查看（按项目实现）。
 
-# 8. API 文档
+# 8. API 文档 (正在开发)
 
 - 项目包含 `api/swagger/` 目录，如存在请使用 Swagger UI 打开对应的 JSON/YAML 文档，或联系开发者生成最新 API 文档。
 
@@ -100,7 +102,7 @@ This project is a web application for managing course/exam timetables. The backe
 
 # 3. Requirements
 
-- Go 1.18+ (or the minimum Go version specified by the project).
+- Go 1.18+ (or the minimum Go version specified by the project). => https://go.dev/doc/install
 - Optional: Node.js (if you need to build frontend assets).
 - Database: Configure per `config.yaml` (local or remote DB as required).
 
@@ -112,7 +114,9 @@ This project is a web application for managing course/exam timetables. The backe
 ```
 2) Configure `config.yaml` in the project root (adjust DB, port, JWT keys, etc.).
 
-3) Build the backend:
+3) Download database: MySQL Workbench => https://dev.mysql.com/downloads/workbench/
+
+4) Build the backend:
 
    go build -o ./bin/app ./server
 
